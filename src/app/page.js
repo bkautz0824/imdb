@@ -1,9 +1,25 @@
-import Image from 'next/image'
 
-export default function Home() {
+const API_KEY = process.env.API_KEY;
+import Results from '@/components/Results';
+
+export default async function Home({ searchParams }) {
+  const genre = searchParams.genre || 'fetchTrending';
+  const res = await fetch(
+    `https://api.themoviedb.org/3${
+      genre === 'fetchTopRated' ? `/movie/top_rated` : `/trending/all/week`
+    }?api_key=${API_KEY}&language=en-US&page=1`,
+    { next: { revalidate: 10000 } }
+  );
+  const data = await res.json();
+  console.log(data)
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  const results = data.results;
   return (
-    <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <h1>Home</h1>
-    </main>
-  )
+    <div>
+      <Results results={results} />
+    </div>
+  );
+
 }
