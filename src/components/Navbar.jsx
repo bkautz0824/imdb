@@ -1,4 +1,4 @@
-import NavbarItem from "./NavBarItem";
+import NavbarItem from "./NavbarItem";
 
 export default function Navbar() {
   return (
